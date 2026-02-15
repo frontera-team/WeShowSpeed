@@ -1,0 +1,45 @@
+# Зависимости (папки, которые можно переустановить)
+node_modules/
+vendor/
+
+# Системные файлы ОС (мусор, который создает Finder/Проводник)
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Файлы с секретами и локальными настройками (никогда не коммитить!)
+.env
+.env.local
+.env.*.local
+
+# Логи (их не хранят в репе, для них есть системы сбора логов)
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Результаты сборки (генерируемый код)
+/dist
+/build
+/out
+
+# Временные файлы редакторов (если кто-то забудет добавить в глобальный gitignore)
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Тестовые покрытия (отчеты, не исходники)
+coverage/
+.nyc_output/
+
+# Кэш инструментов
+.eslintcache
+.prettiercache
+.stylelintcache
