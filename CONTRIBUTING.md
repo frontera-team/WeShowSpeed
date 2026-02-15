@@ -27,12 +27,6 @@ git commit -m "Что именно сделано"
 ```bash
 
 git push -u origin feature/название-задачи
-
-Последующие пуши:
-
-bash
-
-git push
 ```
 
 #### 5. Синхронизируемся с актуальным develop
@@ -44,7 +38,6 @@ git checkout develop
 git pull origin develop
 git checkout feature/название-задачи
 git rebase develop
-git push --force-with-lease
 ```
 
 #### 6. Создаём Pull Request
@@ -55,16 +48,6 @@ git push --force-with-lease
 
 После одобрения нажимаем **"Merge pull request"** (в `develop`)
 
-#### 8. После мержа
-
-Удаляем ветку:
-
-
-```bash
-git checkout develop
-git pull origin develop
-git branch -d feature/название-задачи
-```
 
 ---
 
