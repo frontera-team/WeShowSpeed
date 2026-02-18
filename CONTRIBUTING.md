@@ -1,19 +1,63 @@
 # Алгоритм решения задачи
 
-1. Создание ветки
-	1. Имя ветки:
-		1. 'feature/'+название вашей задачи. *Пример:* feature/link-to-Max
-2. Переход на эту ветку с помощью `git checkout`
-3. Создание коммитов в этой ветке
-4. Синхронизация вашей ветки с main
-	```
-	git checkout main
-	git pull origin main
-	git checkout your-feature-branch
-	git rebase main
-	```
-5. Создание Pull Request на мерж с main
-6. Ревью PR и его закрытие
+#### 1. Начинаем работу над новой задачей
+
+```bash
+git checkout develop
+git pull origin develop
+```
+
+#### 2. Создаём feature-ветку
+
+```bash
+git checkout -b feature/название-задачи
+```
+_Пример:_ `feature/add-avatar-upload`
+
+#### 3. Работаем над задачей
+
+```bash
+git add .
+git commit -m "Что именно сделано"
+```
+#### 4. Публикуем ветку в репозиторий
+
+Первый пуш:
+
+```bash
+
+git push -u origin feature/название-задачи
+```
+
+#### 5. Синхронизируемся с актуальным develop
+
+Перед созданием PR и регулярно в процессе работы:
+
+```bash
+git checkout develop
+git pull origin develop
+git checkout feature/название-задачи
+git rebase develop
+```
+
+#### 6. Создаём Pull Request
+
+На GitHub создаём PR из `feature/название-задачи` в `develop`
+
+#### 7. Ревью и мерж
+
+После одобрения нажимаем **"Merge pull request"** (в `develop`)
+
+
+---
+
+### Релиз в main
+
+Когда `develop` готов к релизу:
+
+1. Создаётся PR из `develop` в `main`
+2. После проверки PR мержится в `main`
+3. На `main` создаётся тег версии (например, `v1.2.0`)
 
 # Правило именование коммита
 `<тип>(<область>): <описание>`
@@ -95,3 +139,4 @@ Frontend:
 ## Описание
 Пишется на **английском**
 Глагол в инфинитиве (не fixed, а fix)
+
