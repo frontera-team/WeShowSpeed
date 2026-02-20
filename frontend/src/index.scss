@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Unbounded:wght@500;700&display=swap');
+
+:root,
+[data-theme='dark'] {
+  --bg: #0a0a0c;
+  --surface: #141416;
+  --border: #2e2e32;
+  --text: #ffffff;
+  --text-muted: #d4d4d8;
+  --accent: #f59e0b;
+  --accent-hover: #fbbf24;
+  --correct: #4ade80;
+  --wrong: #f87171;
+  --pending: #a1a1aa;
+}
+
+[data-theme='light'] {
+  --bg: #f4f4f5;
+  --surface: #ffffff;
+  --border: #e4e4e7;
+  --text: #18181b;
+  --text-muted: #52525b;
+  --accent: #d97706;
+  --accent-hover: #b45309;
+  --correct: #16a34a;
+  --wrong: #dc2626;
+  --pending: #71717a;
+}
+
+:root {
+  font-family: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+  line-height: 1.6;
+  font-weight: 400;
+  color: var(--text);
+  background-color: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  min-width: 320px;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right)
+    env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+#root {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem;
+
+  @media (max-width: 600px) {
+    padding: 1rem;
+  }
+
+  @media (max-width: 380px) {
+    padding: 0.75rem;
+  }
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
