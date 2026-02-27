@@ -8,6 +8,7 @@ import {
 } from '../storage';
 import { getAchievements, getUserAchievements } from '../achievements';
 import { LANGUAGES } from '../data/languages';
+import { useLocale } from '../i18n';
 import type { TypingResult } from '../types';
 import type { LanguageId } from '../types';
 import type { User } from '../auth';
@@ -29,6 +30,7 @@ function formatDate(ts: number): string {
 export function Profile({ user }: ProfileProps) {
   const [results, setResults] = useState<TypingResult[]>([]);
   const [editName, setEditName] = useState('');
+  const { t } = useLocale();
 
   const userId = user?.id ?? null;
 
@@ -54,7 +56,9 @@ export function Profile({ user }: ProfileProps) {
 
   const allAchievements = getAchievements();
   const earnedIds = userId ? getUserAchievements(userId) : [];
-  const earnedAchievements = allAchievements.filter((a) => earnedIds.includes(a.id));
+  const earnedAchievements = allAchievements.filter((a) =>
+    earnedIds.includes(a.id),
+  );
 
   const byLanguage = (LANGUAGES as { id: LanguageId }[])
     .map((lang) => {
@@ -71,7 +75,7 @@ export function Profile({ user }: ProfileProps) {
   };
 
   const handleClearHistory = () => {
-    if (window.confirm('Clear all typing history? This cannot be undone.')) {
+    if (window.confirm(t('profile.clearConfirm'))) {
       clearResults(userId);
       setResults([]);
     }
@@ -80,7 +84,7 @@ export function Profile({ user }: ProfileProps) {
   return (
     <section className='profile'>
       <div className='profile__name-section'>
-        <label className='profile__label'>Display name</label>
+        <label className='profile__label'>{t('profile.displayName')}</label>
         <div className='profile__name-row'>
           <input
             type='text'
@@ -88,22 +92,22 @@ export function Profile({ user }: ProfileProps) {
             value={editName}
             onChange={(e) => setEditName(e.target.value)}
             onBlur={handleSaveName}
-            placeholder='Your name'
+            placeholder={t('profile.placeholderName')}
             maxLength={50}
           />
         </div>
-        <p className='profile__name-hint'>Saved automatically</p>
+        <p className='profile__name-hint'>{t('profile.savedAuto')}</p>
       </div>
 
       {!user && (
         <p className='profile__guest-hint'>
-          Log in to save your statistics across devices.
+          {t('profile.guestHint')}
         </p>
       )}
 
       {earnedAchievements.length > 0 && (
         <div className='profile__achievements'>
-          <h2 className='profile__title'>Achievements</h2>
+          <h2 className='profile__title'>{t('profile.achievements')}</h2>
           <ul className='profile__achievements-list'>
             {earnedAchievements.map((a) => (
               <li key={a.id} className='profile__achievement'>
@@ -111,7 +115,9 @@ export function Profile({ user }: ProfileProps) {
                 <div className='profile__achievement-body'>
                   <span className='profile__achievement-name'>{a.name}</span>
                   {a.description && (
-                    <span className='profile__achievement-desc'>{a.description}</span>
+                    <span className='profile__achievement-desc'>
+                      {a.description}
+                    </span>
                   )}
                 </div>
               </li>
@@ -120,42 +126,42 @@ export function Profile({ user }: ProfileProps) {
         </div>
       )}
 
-      <h2 className='profile__title'>Statistics</h2>
+      <h2 className='profile__title'>{t('profile.statistics')}</h2>
 
       {totalTests === 0 ? (
         <p className='profile__empty'>
-          No tests yet. Complete a typing test to see your stats here.
+          {t('profile.noTests')}
         </p>
       ) : (
         <>
           <div className='profile__stats'>
             <div className='profile__stat profile__stat--highlight'>
               <span className='profile__stat-value'>{bestWpm}</span>
-              <span className='profile__stat-label'>Best WPM</span>
+              <span className='profile__stat-label'>{t('profile.bestWpm')}</span>
             </div>
             <div className='profile__stat'>
               <span className='profile__stat-value'>{avgWpm}</span>
-              <span className='profile__stat-label'>Average WPM</span>
+              <span className='profile__stat-label'>{t('profile.avgWpm')}</span>
             </div>
             <div className='profile__stat'>
               <span className='profile__stat-value'>{avgAccuracy}%</span>
-              <span className='profile__stat-label'>Average accuracy</span>
+              <span className='profile__stat-label'>{t('profile.avgAccuracy')}</span>
             </div>
             <div className='profile__stat'>
               <span className='profile__stat-value'>{totalTests}</span>
-              <span className='profile__stat-label'>Tests completed</span>
+              <span className='profile__stat-label'>{t('profile.testsCompleted')}</span>
             </div>
             <div className='profile__stat'>
               <span className='profile__stat-value'>
                 {totalChars.toLocaleString()}
               </span>
-              <span className='profile__stat-label'>Correct chars total</span>
+              <span className='profile__stat-label'>{t('profile.correctCharsTotal')}</span>
             </div>
           </div>
 
           {byLanguage.length > 0 && (
             <div className='profile__by-lang'>
-              <h3 className='profile__subtitle'>By language</h3>
+              <h3 className='profile__subtitle'>{t('profile.byLanguage')}</h3>
               <ul className='profile__lang-list'>
                 {byLanguage.map(({ lang, count, best }) => {
                   const l = LANGUAGES.find((x) => x.id === lang.id);
@@ -166,7 +172,7 @@ export function Profile({ user }: ProfileProps) {
                         {l?.name ?? lang.id}
                       </span>
                       <span className='profile__lang-best'>{best} WPM</span>
-                      <span className='profile__lang-count'>{count} tests</span>
+                      <span className='profile__lang-count'>{count} {t('profile.tests')}</span>
                     </li>
                   );
                 })}
@@ -175,7 +181,7 @@ export function Profile({ user }: ProfileProps) {
           )}
 
           <div className='profile__recent'>
-            <h3 className='profile__subtitle'>Recent results</h3>
+            <h3 className='profile__subtitle'>{t('profile.recentResults')}</h3>
             <ul className='profile__recent-list'>
               {results.slice(0, 10).map((r, i) => {
                 const l = LANGUAGES.find((x) => x.id === r.languageId);
@@ -192,7 +198,7 @@ export function Profile({ user }: ProfileProps) {
                     <span className='profile__recent-acc'>{r.accuracy}%</span>
                     <span
                       className='profile__recent-duration'
-                      title='Test duration'
+                      title={t('profile.testDuration')}
                     >
                       {duration}
                     </span>
@@ -213,7 +219,7 @@ export function Profile({ user }: ProfileProps) {
             className='profile__clear'
             onClick={handleClearHistory}
           >
-            Clear history
+            {t('profile.clearHistory')}
           </button>
         </>
       )}

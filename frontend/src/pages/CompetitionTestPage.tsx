@@ -1,11 +1,13 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { TypingTest } from '../components/TypingTest';
 import { useCompetition } from '../contexts/CompetitionContext';
+import { useLocale } from '../i18n';
 
 export function CompetitionTestPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const { startData, submitResult } = useCompetition();
+  const { t } = useLocale();
   const state = location.state as {
     text?: string;
     durationSec?: number;
@@ -42,7 +44,7 @@ export function CompetitionTestPage() {
   return (
     <section className='competition-test'>
       <p className='competition-test__label'>
-        Competition — type the same text as your opponent
+        {t('compTest.label')}
       </p>
       <TypingTest
         languageId={languageId}
@@ -51,7 +53,7 @@ export function CompetitionTestPage() {
         initialText={text}
       />
       <p className='competition-test__wait'>
-        When both finish, results will appear.
+        {t('compTest.wait')}
       </p>
     </section>
   );

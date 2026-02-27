@@ -1,10 +1,5 @@
 import { applyTheme, setStoredTheme, type ThemeId } from '../theme';
-
-const THEMES: { id: ThemeId; label: string }[] = [
-  { id: 'light', label: 'Light' },
-  { id: 'dark', label: 'Dark' },
-  { id: 'system', label: 'System' },
-];
+import { useLocale } from '../i18n';
 
 interface ThemeSwitcherProps {
   value: ThemeId;
@@ -12,6 +7,12 @@ interface ThemeSwitcherProps {
 }
 
 export function ThemeSwitcher({ value, onChange }: ThemeSwitcherProps) {
+  const { t } = useLocale();
+  const THEMES = [
+    { id: 'light' as const, label: t('theme.light') },
+    { id: 'dark' as const, label: t('theme.dark') },
+    { id: 'system' as const, label: t('theme.system') },
+  ];
   const handleChange = (theme: ThemeId) => {
     setStoredTheme(theme);
     applyTheme(theme);
@@ -21,15 +22,15 @@ export function ThemeSwitcher({ value, onChange }: ThemeSwitcherProps) {
   return (
     <div className="theme-switcher">
       <div className="theme-switcher__buttons">
-        {THEMES.map((t) => (
+        {THEMES.map((theme) => (
           <button
-            key={t.id}
+            key={theme.id}
             type="button"
-            className={`theme-switcher__btn ${value === t.id ? 'theme-switcher__btn--active' : ''}`}
-            onClick={() => handleChange(t.id)}
-            title={t.id === 'system' ? 'Follow device setting' : t.label}
+            className={`theme-switcher__btn ${value === theme.id ? 'theme-switcher__btn--active' : ''}`}
+            onClick={() => handleChange(theme.id)}
+            title={theme.id === 'system' ? t('theme.followDevice') : theme.label}
           >
-            {t.label}
+            {theme.label}
           </button>
         ))}
       </div>
@@ -37,11 +38,11 @@ export function ThemeSwitcher({ value, onChange }: ThemeSwitcherProps) {
         className="theme-switcher__select"
         value={value}
         onChange={(e) => handleChange(e.target.value as ThemeId)}
-        aria-label="Theme"
+        aria-label={t('theme.aria')}
       >
-        {THEMES.map((t) => (
-          <option key={t.id} value={t.id}>
-            {t.label}
+        {THEMES.map((theme) => (
+          <option key={theme.id} value={theme.id}>
+            {theme.label}
           </option>
         ))}
       </select>

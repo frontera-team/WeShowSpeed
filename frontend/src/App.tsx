@@ -9,6 +9,7 @@ import {
   Navigate,
 } from 'react-router-dom';
 import { LanguageSelect } from './components/LanguageSelect';
+import { LocaleSwitcher } from './components/LocaleSwitcher';
 import { TypingTest } from './components/TypingTest';
 import { Results } from './components/Results';
 import { Profile } from './components/Profile';
@@ -22,6 +23,7 @@ import { AdminPage } from './pages/AdminPage';
 import { saveResult } from './storage';
 import { getCurrentUser, logout, type User } from './auth';
 import { initTheme, getStoredTheme, type ThemeId } from './theme';
+import { useLocale } from './i18n';
 import type { LanguageId } from './types';
 import type { TypingResult } from './types';
 import faviconUrl from '@/assets/favicon.svg';
@@ -35,6 +37,7 @@ function App() {
   const location = useLocation();
   const navigate = useNavigate();
   const pathname = location.pathname;
+  const { t } = useLocale();
 
   useEffect(() => {
     setCurrentUser(getCurrentUser());
@@ -87,7 +90,7 @@ function App() {
             <Link
               to='/'
               className='app__nav-logo'
-              aria-label='WeShowSpeed Home'
+              aria-label={t('app.homeAria')}
             >
               <img src={faviconUrl} alt='' width={28} height={28} />
             </Link>
@@ -96,7 +99,7 @@ function App() {
               className='app__nav-burger'
               onClick={() => setIsMenuOpen((v) => !v)}
               aria-expanded={isMenuOpen}
-              aria-label='Menu'
+              aria-label={t('app.menu')}
             >
               <span className='app__nav-burger-bar' />
               <span className='app__nav-burger-bar' />
@@ -110,13 +113,13 @@ function App() {
               to='/'
               className={`app__nav-link ${isHomeActive ? 'app__nav-link--active' : ''}`}
             >
-              Home
+              {t('app.home')}
             </Link>
             <Link
               to='/competition'
               className={`app__nav-link ${isCompetitionActive ? 'app__nav-link--active' : ''}`}
             >
-              Competition
+              {t('app.competition')}
             </Link>
             {currentUser ? (
               <>
@@ -124,14 +127,14 @@ function App() {
                   to='/profile'
                   className={`app__nav-link ${pathname === '/profile' ? 'app__nav-link--active' : ''}`}
                 >
-                  Account
+                  {t('app.account')}
                 </Link>
                 {currentUser.role === 'staff' && (
                   <Link
                     to='/admin'
                     className={`app__nav-link ${isAdminActive ? 'app__nav-link--active' : ''}`}
                   >
-                    Admin
+                    {t('app.admin')}
                   </Link>
                 )}
                 <button
@@ -139,7 +142,7 @@ function App() {
                   className='app__nav-link app__nav-link--logout'
                   onClick={handleLogout}
                 >
-                  Log out
+                  {t('app.logOut')}
                 </button>
               </>
             ) : (
@@ -148,16 +151,17 @@ function App() {
                   to='/login'
                   className={`app__nav-link ${pathname === '/login' ? 'app__nav-link--active' : ''}`}
                 >
-                  Log in
+                  {t('app.logIn')}
                 </Link>
                 <Link
                   to='/register'
                   className={`app__nav-link ${pathname === '/register' ? 'app__nav-link--active' : ''}`}
                 >
-                  Sign up
+                  {t('app.signUp')}
                 </Link>
               </>
             )}
+            <LocaleSwitcher />
             <ThemeSwitcher value={theme} onChange={setTheme} />
           </div>
         </nav>,
@@ -174,7 +178,7 @@ function App() {
             <h1 className='app__title'>
               <Link to='/'>WeShowSpeed</Link>
             </h1>
-            <p className='app__subtitle'>Typing speed competition</p>
+            <p className='app__subtitle'>{t('app.subtitle')}</p>
           </header>
         )}
 
@@ -211,8 +215,7 @@ function App() {
         </main>
 
         <footer className='app__footer'>
-          Choose a language and duration, then type the text. Finish before time
-          runs out or complete the full passage.
+          {t('app.footer')}
         </footer>
       </div>
     </>
@@ -223,6 +226,7 @@ function HomePage() {
   const [languageId, setLanguageId] = useState<LanguageId>('en');
   const [durationSec, setDurationSec] = useState<number>(60);
   const navigate = useNavigate();
+  const { t } = useLocale();
 
   const handleStart = () => {
     navigate('/test', { state: { languageId, durationSec } });
@@ -232,7 +236,7 @@ function HomePage() {
     <div className='home'>
       <LanguageSelect value={languageId} onChange={setLanguageId} />
       <div className='home__duration'>
-        <span className='home__duration-label'>Duration:</span>
+        <span className='home__duration-label'>{t('home.duration')}</span>
         <div className='home__duration-options'>
           {DURATION_OPTIONS.map((sec) => (
             <button
@@ -241,13 +245,13 @@ function HomePage() {
               className={`home__duration-btn ${durationSec === sec ? 'home__duration-btn--active' : ''}`}
               onClick={() => setDurationSec(sec)}
             >
-              {sec} sec
+              {sec} {t('home.sec')}
             </button>
           ))}
         </div>
       </div>
       <button type='button' className='home__start' onClick={handleStart}>
-        Start test ({durationSec} sec)
+        {t('home.startTest')} ({durationSec} {t('home.sec')})
       </button>
     </div>
   );

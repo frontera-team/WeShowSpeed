@@ -1,7 +1,6 @@
 const USERS_KEY = 'weshowspeed-users';
 const CURRENT_USER_ID_KEY = 'weshowspeed-currentUserId';
 
-/** Emails that get staff role on register/login (bootstrap). */
 const STAFF_EMAILS = ['admin@weshowspeed.test'];
 
 export type UserRole = 'user' | 'staff';

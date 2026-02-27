@@ -1,5 +1,6 @@
 import { LANGUAGES } from '../data/languages';
 import type { LanguageId } from '../types';
+import { useLocale } from '../i18n';
 
 interface LanguageSelectProps {
   value: LanguageId;
@@ -8,9 +9,10 @@ interface LanguageSelectProps {
 }
 
 export function LanguageSelect({ value, onChange, disabled }: LanguageSelectProps) {
+  const { t } = useLocale();
   return (
     <div className="lang-select">
-      <span className="lang-select__label">Language:</span>
+      <span className="lang-select__label">{t('lang.label')}</span>
       <div className="lang-select__options">
         {LANGUAGES.map((lang) => (
           <button

@@ -1,5 +1,6 @@
 import type { TypingResult } from '../types';
 import { LANGUAGES } from '../data/languages';
+import { useLocale } from '../i18n';
 
 interface ResultsProps {
   result: TypingResult;
@@ -8,32 +9,33 @@ interface ResultsProps {
 
 export function Results({ result, onRestart }: ResultsProps) {
   const lang = LANGUAGES.find((l) => l.id === result.languageId);
+  const { t } = useLocale();
 
   return (
     <section className='results'>
-      <h2 className='results__title'>Result</h2>
+      <h2 className='results__title'>{t('results.title')}</h2>
       <div className='results__stats'>
         <div className='results__stat'>
           <span className='results__value'>{result.wpm}</span>
-          <span className='results__label'>WPM</span>
+          <span className='results__label'>{t('results.wpm')}</span>
         </div>
         <div className='results__stat'>
           <span className='results__value'>{result.accuracy}%</span>
-          <span className='results__label'>accuracy</span>
+          <span className='results__label'>{t('results.accuracy')}</span>
         </div>
         <div className='results__stat results__stat--meta'>
           <span className='results__value'>
             {result.correctChars}/{result.totalChars}
           </span>
-          <span className='results__label'>chars</span>
+          <span className='results__label'>{t('results.chars')}</span>
         </div>
         <div className='results__stat results__stat--meta'>
           <span className='results__value'>{result.timeSeconds}s</span>
-          <span className='results__label'>time</span>
+          <span className='results__label'>{t('results.time')}</span>
         </div>
         <div className='results__stat results__stat--meta'>
           <span className='results__value'>{result.durationSec ?? '—'}s</span>
-          <span className='results__label'>duration</span>
+          <span className='results__label'>{t('results.duration')}</span>
         </div>
       </div>
       {lang && (
@@ -42,7 +44,7 @@ export function Results({ result, onRestart }: ResultsProps) {
         </p>
       )}
       <button type='button' className='results__again' onClick={onRestart}>
-        Try again
+        {t('results.tryAgain')}
       </button>
     </section>
   );

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useCompetition } from '../contexts/CompetitionContext';
 import { LanguageSelect } from '../components/LanguageSelect';
+import { useLocale } from '../i18n';
 import type { LanguageId } from '../types';
 
 const DURATION_OPTIONS = [15, 30, 60, 90, 120, 180] as const;
@@ -25,6 +26,7 @@ export function CompetitionPage() {
   const [durationSec, setDurationSec] = useState(60);
   const [joinCode, setJoinCode] = useState('');
   const [secondsLeft, setSecondsLeft] = useState<number | null>(null);
+  const { t } = useLocale();
 
   useEffect(() => {
     if (secondConfirmDeadline == null) {
@@ -46,12 +48,12 @@ export function CompetitionPage() {
   if (roomState === 'waiting' && roomId) {
     return (
       <section className='competition'>
-        <h2 className='competition__title'>Competition</h2>
+        <h2 className='competition__title'>{t('comp.title')}</h2>
         <p className='competition__code'>
-          Room code: <strong>{roomId}</strong>
+          {t('comp.roomCode')} <strong>{roomId}</strong>
         </p>
         <p className='competition__hint'>
-          Share this code with your opponent. Waiting for opponent to join...
+          {t('comp.waitingHint')}
         </p>
         <ul className='competition__players'>
           {players.map((p, i) => (
@@ -65,7 +67,7 @@ export function CompetitionPage() {
           className='competition__btn competition__btn--secondary'
           onClick={reset}
         >
-          Cancel
+          {t('comp.cancel')}
         </button>
       </section>
     );
@@ -76,27 +78,27 @@ export function CompetitionPage() {
       players.length >= 2 && players.every((p) => p.confirmed);
     return (
       <section className='competition'>
-        <h2 className='competition__title'>Confirm ready</h2>
+        <h2 className='competition__title'>{t('comp.confirmReady')}</h2>
         <ul className='competition__players'>
           {players.map((p, i) => (
             <li key={i} className='competition__player'>
-              {p.name} {p.confirmed ? '✓ Ready' : '—'}
+              {p.name} {p.confirmed ? t('comp.ready') : '—'}
             </li>
           ))}
         </ul>
         {secondConfirmDeadline != null && !allConfirmed && (
           <p className='competition__timer'>
-            Opponent confirmed. Confirm within{' '}
+            {t('comp.opponentConfirm')}{' '}
             <strong>{secondsLeft ?? 30}s</strong>.
           </p>
         )}
         {!allConfirmed && (
           <button type='button' className='competition__btn' onClick={confirm}>
-            I&apos;m ready
+            {t('comp.imReady')}
           </button>
         )}
         {allConfirmed && (
-          <p className='competition__hint'>Both ready! Starting in 3...</p>
+          <p className='competition__hint'>{t('comp.bothReady')}</p>
         )}
       </section>
     );
@@ -106,7 +108,7 @@ export function CompetitionPage() {
     return (
       <section className='competition'>
         <h2 className='competition__countdown'>
-          {countdownSec > 0 ? countdownSec : 'Go!'}
+          {countdownSec > 0 ? countdownSec : t('comp.go')}
         </h2>
       </section>
     );
@@ -115,21 +117,21 @@ export function CompetitionPage() {
   if (mode === 'create') {
     return (
       <section className='competition'>
-        <h2 className='competition__title'>Create competition</h2>
+        <h2 className='competition__title'>{t('comp.createTitle')}</h2>
         {error && <p className='competition__error'>{error}</p>}
         <label className='competition__label'>
-          Your name
+          {t('comp.yourName')}
           <input
             type='text'
             className='competition__input'
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder='Name'
+            placeholder={t('comp.placeholderName')}
           />
         </label>
         <LanguageSelect value={languageId} onChange={setLanguageId} />
         <div className='competition__duration'>
-          <span className='competition__duration-label'>Duration:</span>
+          <span className='competition__duration-label'>{t('comp.duration')}</span>
           <div className='competition__duration-options'>
             {DURATION_OPTIONS.map((sec) => (
               <button
@@ -149,14 +151,14 @@ export function CompetitionPage() {
           onClick={() => createRoom(name || 'Player', languageId, durationSec)}
           disabled={!name.trim()}
         >
-          Create room
+          {t('comp.createRoom')}
         </button>
         <button
           type='button'
           className='competition__btn competition__btn--secondary'
           onClick={() => setMode('choose')}
         >
-          Back
+          {t('comp.back')}
         </button>
       </section>
     );
@@ -165,26 +167,26 @@ export function CompetitionPage() {
   if (mode === 'join') {
     return (
       <section className='competition'>
-        <h2 className='competition__title'>Join competition</h2>
+        <h2 className='competition__title'>{t('comp.joinTitle')}</h2>
         {error && <p className='competition__error'>{error}</p>}
         <label className='competition__label'>
-          Your name
+          {t('comp.yourName')}
           <input
             type='text'
             className='competition__input'
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder='Name'
+            placeholder={t('comp.placeholderName')}
           />
         </label>
         <label className='competition__label'>
-          Room code
+          {t('comp.roomCodeLabel')}
           <input
             type='text'
             className='competition__input competition__input--code'
             value={joinCode}
             onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
-            placeholder='ABC123'
+            placeholder={t('comp.placeholderCode')}
             maxLength={6}
           />
         </label>
@@ -194,14 +196,14 @@ export function CompetitionPage() {
           onClick={() => joinRoom(joinCode.trim(), name || 'Player')}
           disabled={!name.trim() || joinCode.trim().length < 4}
         >
-          Join
+          {t('comp.join')}
         </button>
         <button
           type='button'
           className='competition__btn competition__btn--secondary'
           onClick={() => setMode('choose')}
         >
-          Back
+          {t('comp.back')}
         </button>
       </section>
     );
@@ -209,9 +211,9 @@ export function CompetitionPage() {
 
   return (
     <section className='competition'>
-      <h2 className='competition__title'>Play vs opponent</h2>
+      <h2 className='competition__title'>{t('comp.playVs')}</h2>
       <p className='competition__hint'>
-        Create a room and share the code, or join with a code.
+        {t('comp.playVsHint')}
       </p>
       <div className='competition__actions'>
         <button
@@ -219,14 +221,14 @@ export function CompetitionPage() {
           className='competition__btn'
           onClick={() => setMode('create')}
         >
-          Create room
+          {t('comp.createRoom')}
         </button>
         <button
           type='button'
           className='competition__btn competition__btn--outline'
           onClick={() => setMode('join')}
         >
-          Join with code
+          {t('comp.joinWithCode')}
         </button>
       </div>
     </section>

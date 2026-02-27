@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { login } from '../auth';
+import { useLocale } from '../i18n';
 
 interface LoginProps {
   onSuccess: () => void;
@@ -11,6 +12,7 @@ export function Login({ onSuccess, onSwitchToRegister }: LoginProps) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const { t } = useLocale();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,41 +29,41 @@ export function Login({ onSuccess, onSwitchToRegister }: LoginProps) {
 
   return (
     <section className="auth">
-      <h2 className="auth__title">Log in</h2>
+      <h2 className="auth__title">{t('auth.logIn')}</h2>
       <form className="auth__form" onSubmit={handleSubmit}>
         {error && <p className="auth__error">{error}</p>}
         <label className="auth__label">
-          Email
+          {t('auth.email')}
           <input
             type="email"
             className="auth__input"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@example.com"
+            placeholder={t('auth.placeholderEmail')}
             autoComplete="email"
             required
           />
         </label>
         <label className="auth__label">
-          Password
+          {t('auth.password')}
           <input
             type="password"
             className="auth__input"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="••••••••"
+            placeholder={t('auth.placeholderPassword')}
             autoComplete="current-password"
             required
           />
         </label>
         <button type="submit" className="auth__submit" disabled={loading}>
-          {loading ? 'Logging in...' : 'Log in'}
+          {loading ? t('auth.loggingIn') : t('auth.logIn')}
         </button>
       </form>
       <p className="auth__switch">
-        Don&apos;t have an account?{' '}
+        {t('auth.noAccount')}{' '}
         <button type="button" className="auth__link" onClick={onSwitchToRegister}>
-          Sign up
+          {t('auth.signUp')}
         </button>
       </p>
     </section>
