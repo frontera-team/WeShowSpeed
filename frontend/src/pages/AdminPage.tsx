@@ -10,6 +10,7 @@ import {
   revokeAchievement,
   type Achievement,
 } from '../achievements';
+import { useLocale } from '../i18n';
 
 export function AdminPage() {
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ export function AdminPage() {
   const [grantUserId, setGrantUserId] = useState('');
   const [grantAchId, setGrantAchId] = useState('');
   const [error, setError] = useState('');
+  const { t } = useLocale();
 
   useEffect(() => {
     const u = getCurrentUser();
@@ -44,7 +46,7 @@ export function AdminPage() {
     setError('');
     const name = newName.trim();
     if (!name) {
-      setError('Name is required');
+      setError(t('admin.nameRequired'));
       return;
     }
     addAchievement({ name, description: newDesc.trim(), icon: newIcon.trim() || '🏆' });
@@ -55,7 +57,7 @@ export function AdminPage() {
   };
 
   const handleRemove = (id: string) => {
-    if (window.confirm('Delete this achievement? Users will lose it.')) {
+    if (window.confirm(t('admin.deleteConfirm'))) {
       removeAchievement(id);
       refresh();
     }
@@ -81,50 +83,50 @@ export function AdminPage() {
     <section className="admin">
       <div className="admin__header">
         <Link to="/" className="admin__back">
-          ← Back
+          {t('admin.back')}
         </Link>
-        <h2 className="admin__title">Admin panel</h2>
+        <h2 className="admin__title">{t('admin.title')}</h2>
       </div>
 
       <div className="admin__section">
-        <h3 className="admin__section-title">Achievements</h3>
+        <h3 className="admin__section-title">{t('admin.achievements')}</h3>
         <form className="admin__form" onSubmit={handleAddAchievement}>
           <label className="admin__label">
-            Name
+            {t('admin.name')}
             <input
               type="text"
               className="admin__input"
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
-              placeholder="Achievement name"
+              placeholder={t('admin.placeholderName')}
               maxLength={80}
             />
           </label>
           <label className="admin__label">
-            Description
+            {t('admin.description')}
             <input
               type="text"
               className="admin__input"
               value={newDesc}
               onChange={(e) => setNewDesc(e.target.value)}
-              placeholder="Description"
+              placeholder={t('admin.placeholderDesc')}
               maxLength={300}
             />
           </label>
           <label className="admin__label">
-            Icon (emoji)
+            {t('admin.icon')}
             <input
               type="text"
               className="admin__input admin__input--icon"
               value={newIcon}
               onChange={(e) => setNewIcon(e.target.value)}
-              placeholder="🏆"
+              placeholder={t('admin.placeholderIcon')}
               maxLength={10}
             />
           </label>
           {error && <p className="admin__error">{error}</p>}
           <button type="submit" className="admin__btn">
-            Add achievement
+            {t('admin.addAchievement')}
           </button>
         </form>
 
@@ -141,28 +143,28 @@ export function AdminPage() {
                 className="admin__btn admin__btn--small admin__btn--danger"
                 onClick={() => handleRemove(a.id)}
               >
-                Delete
+                {t('admin.delete')}
               </button>
             </li>
           ))}
         </ul>
         {achievements.length === 0 && (
-          <p className="admin__empty">No achievements yet. Add one above.</p>
+          <p className="admin__empty">{t('admin.noAchievements')}</p>
         )}
       </div>
 
       <div className="admin__section">
-        <h3 className="admin__section-title">Grant achievement to user</h3>
+        <h3 className="admin__section-title">{t('admin.grantTitle')}</h3>
         <form className="admin__form admin__form--row" onSubmit={handleGrant}>
           <label className="admin__label">
-            User
+            {t('admin.user')}
             <select
               className="admin__input"
               value={grantUserId}
               onChange={(e) => setGrantUserId(e.target.value)}
               required
             >
-              <option value="">Select user</option>
+              <option value="">{t('admin.selectUser')}</option>
               {users.map((u) => (
                 <option key={u.id} value={u.id}>
                   {u.name} ({u.email})
@@ -171,14 +173,14 @@ export function AdminPage() {
             </select>
           </label>
           <label className="admin__label">
-            Achievement
+            {t('admin.achievement')}
             <select
               className="admin__input"
               value={grantAchId}
               onChange={(e) => setGrantAchId(e.target.value)}
               required
             >
-              <option value="">Select achievement</option>
+              <option value="">{t('admin.selectAchievement')}</option>
               {achievements.map((a) => (
                 <option key={a.id} value={a.id}>
                   {a.icon} {a.name}
@@ -187,13 +189,13 @@ export function AdminPage() {
             </select>
           </label>
           <button type="submit" className="admin__btn" disabled={!grantUserId || !grantAchId}>
-            Grant
+            {t('admin.grant')}
           </button>
         </form>
       </div>
 
       <div className="admin__section">
-        <h3 className="admin__section-title">Users & their achievements</h3>
+        <h3 className="admin__section-title">{t('admin.usersTitle')}</h3>
         <ul className="admin__user-list">
           {users.map((u) => {
             const userAchs = getUserAchievements(u.id);
@@ -207,7 +209,7 @@ export function AdminPage() {
                 </div>
                 <div className="admin__user-achs">
                   {resolved.length === 0 ? (
-                    <span className="admin__muted">None</span>
+                    <span className="admin__muted">{t('admin.none')}</span>
                   ) : (
                     resolved.map((a) => (
                       <span key={a.id} className="admin__ach-tag">
@@ -216,7 +218,7 @@ export function AdminPage() {
                           type="button"
                           className="admin__revoke"
                           onClick={() => handleRevoke(u.id, a.id)}
-                          title="Revoke"
+                          title={t('admin.revoke')}
                         >
                           ×
                         </button>

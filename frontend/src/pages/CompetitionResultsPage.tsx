@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useCompetition } from '../contexts/CompetitionContext';
+import { useLocale } from '../i18n';
 
 interface ResultRow {
   name: string;
@@ -10,6 +11,7 @@ export function CompetitionResultsPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const { results: ctxResults, reset } = useCompetition();
+  const { t } = useLocale();
   const stateResults = (location.state as { results?: ResultRow[] } | null)
     ?.results;
   const results = stateResults ?? ctxResults ?? [];
@@ -26,15 +28,15 @@ export function CompetitionResultsPage() {
 
   return (
     <section className='competition-results'>
-      <h2 className='competition-results__title'>Competition results</h2>
+      <h2 className='competition-results__title'>{t('compResults.title')}</h2>
       <div className='competition-results__table-wrap'>
         <table className='competition-results__table'>
           <thead>
             <tr>
               <th>#</th>
-              <th>Name</th>
+              <th>{t('compResults.name')}</th>
               <th>WPM</th>
-              <th>Accuracy</th>
+              <th>{t('compResults.accuracy')}</th>
             </tr>
           </thead>
           <tbody>
@@ -56,7 +58,7 @@ export function CompetitionResultsPage() {
           </tbody>
         </table>
       </div>
-      <p className='competition-results__winner'>{winner?.name} wins!</p>
+      <p className='competition-results__winner'>{winner?.name} {t('compResults.wins')}</p>
       <button
         type='button'
         className='competition-results__btn'
@@ -65,7 +67,7 @@ export function CompetitionResultsPage() {
           navigate('/competition');
         }}
       >
-        Play again
+        {t('compResults.playAgain')}
       </button>
     </section>
   );

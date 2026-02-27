@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { getRandomWords } from '../data/texts';
+import { useLocale } from '../i18n';
 import type { LanguageId } from '../types';
 import type { TypingResult } from '../types';
 
@@ -23,6 +24,7 @@ export function TypingTest({
   const [elapsed, setElapsed] = useState(0);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const finishedRef = useRef(false);
+  const { t } = useLocale();
 
   const [userEnded, setUserEnded] = useState(false);
   const timeUp = startTime !== null && elapsed >= durationSec;
@@ -105,7 +107,7 @@ export function TypingTest({
         ) : (
           <span className='typing-test__time typing-test__time--done'>0</span>
         )}
-        <span className='typing-test__timer-label'>sec</span>
+        <span className='typing-test__timer-label'>{t('typing.sec')}</span>
       </div>
 
       <div className='typing-test__prompt' dir={isRtl ? 'rtl' : 'ltr'}>
@@ -137,7 +139,7 @@ export function TypingTest({
         onKeyDown={handleKeyDown}
         onPaste={(e) => e.preventDefault()}
         onCopy={(e) => e.preventDefault()}
-        placeholder='Start typing...'
+        placeholder={t('typing.placeholder')}
         spellCheck={false}
         autoComplete='off'
         readOnly={isFinished}
@@ -146,7 +148,7 @@ export function TypingTest({
       />
 
       {!startTime && (
-        <p className='typing-test__hint'>Press any key to start the timer</p>
+        <p className='typing-test__hint'>{t('typing.hintStart')}</p>
       )}
       {startTime && !isFinished && (
         <button
@@ -154,12 +156,12 @@ export function TypingTest({
           className='typing-test__end-btn'
           onClick={() => setUserEnded(true)}
         >
-          End test
+          {t('typing.endTest')}
         </button>
       )}
       {textCompleted && (
         <p className='typing-test__hint typing-test__hint--success'>
-          Done! Well done.
+          {t('typing.done')}
         </p>
       )}
     </section>

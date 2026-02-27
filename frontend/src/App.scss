@@ -62,12 +62,13 @@
 
 .app__nav {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   justify-content: flex-start;
   gap: 0.25rem;
   padding: 0 0.25rem;
   width: 100%;
+  min-width: 0;
 }
 
 .app__nav-top {
@@ -126,11 +127,19 @@
 .app__nav-center {
   flex: 1;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   justify-content: center;
   gap: 0.25rem;
   min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.app__nav-center::-webkit-scrollbar {
+  display: none;
 }
 
 .app__nav-logo {
@@ -160,8 +169,8 @@
   justify-content: center;
   flex-shrink: 0;
   min-height: 2.25rem;
-  padding: 0.4rem 0.85rem;
-  font-size: 0.85rem;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.8rem;
   line-height: 1.35;
   white-space: nowrap;
   color: var(--text-muted);
@@ -212,12 +221,41 @@
 }
 
 /* Theme switcher in nav */
+.locale-switcher {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.25rem;
+  padding-left: 0.25rem;
+  border-left: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.locale-switcher__select {
+  min-height: 2.25rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  max-width: 5.5rem;
+}
+
+.locale-switcher__select:hover,
+.locale-switcher__select:focus {
+  color: var(--text);
+  border-color: var(--accent);
+  outline: none;
+}
+
 .theme-switcher {
   display: inline-flex;
   align-items: center;
-  margin-left: 0.5rem;
-  padding-left: 0.5rem;
+  margin-left: 0.25rem;
+  padding-left: 0.25rem;
   border-left: 1px solid var(--border);
+  flex-shrink: 0;
 }
 
 .theme-switcher__buttons {
@@ -236,8 +274,8 @@
   justify-content: center;
   flex-shrink: 0;
   min-height: 2.25rem;
-  padding: 0.3rem 0.6rem;
-  font-size: 0.8rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
   white-space: nowrap;
   color: var(--text-muted);
   background: transparent;
@@ -1109,11 +1147,19 @@
 
   .app__nav-center .app__nav-link,
   .app__nav-center .app__nav-user,
-  .app__nav-center .theme-switcher {
+  .app__nav-center .theme-switcher,
+  .app__nav-center .locale-switcher {
     width: 100%;
     justify-content: center;
     min-height: 2.75rem;
     border-radius: 8px;
+  }
+
+  .app__nav-center .theme-switcher,
+  .app__nav-center .locale-switcher {
+    margin-left: 0;
+    padding-left: 0;
+    border-left: none;
   }
 
   .app__nav-center .theme-switcher {
