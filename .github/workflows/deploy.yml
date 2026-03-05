@@ -1,0 +1,44 @@
+# .github/workflows/deploy.yml
+name: Deploy frontend to GitHub Pages
+
+on:
+  push:
+    branches: ["main"]
+    # Запускать деплой только при изменениях в папке frontend
+    paths:
+      - "frontend/**"
+      - ".github/workflows/deploy.yml"
+  # Возможность запуска вручную
+  workflow_dispatch:
+
+# Разрешения для деплоя на GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Конкурентность: одна задача деплоя за раз
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Загружаем содержимое папки frontend как артефакт для Pages
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Указываем путь к вашей папке с сайтом
+          path: "frontend"
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
